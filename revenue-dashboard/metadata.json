@@ -1,0 +1,6 @@
+{
+  "name": "Revenue Dashboard",
+  "description": "An interactive Stripe-like revenue dashboard with multi-currency support, flexible date range filtering, preset periods, and detailed charts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
