@@ -278,7 +278,7 @@ export default function AdminPanel({
                   value={form.amount}
                   onChange={(e) => handleField('amount', e.target.value)}
                   className="w-full rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-mono outline-none focus:border-brand focus:ring-1 focus:ring-brand"
-                  placeholder="149.00"
+                  placeholder="8500.00"
                 />
               </div>
               <div className="space-y-1">

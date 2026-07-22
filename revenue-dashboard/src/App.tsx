@@ -207,12 +207,11 @@ export default function App() {
     const randomNames = ['John Doe', 'Alice Freeman', 'Robert Lee', 'Zoe Jenkins', 'Kevin Patel', 'Hana Suzuki'];
     const randomEmails = ['john.d@company.com', 'alice@freeman.io', 'r.lee@tech.co', 'zoe.j@example.com', 'kpatel@fintech.net', 'hana@suzuki.co.jp'];
     const randomDescs = ['SaaS Pro Subscription - Standard Monthly', 'API Usage Pack - Overages Tier 2', 'Developer Seat License add-on', 'Premium Support SLA - Custom Integration'];
-    const randomPrices = [79, 149, 29, 300];
 
     const idx = Math.floor(Math.random() * randomNames.length);
     const prodIdx = Math.floor(Math.random() * randomDescs.length);
 
-    const priceUSD = randomPrices[prodIdx];
+    const priceUSD = Math.round((2000 + Math.random() * 13000) * 100) / 100;
     const feeUSD = Math.round((priceUSD * 0.029 + 0.3) * 100) / 100;
 
     const nativeCurrencies = ['USD', 'EUR', 'GBP', 'JPY'];
@@ -413,6 +412,7 @@ export default function App() {
                   value={metrics.successfulPayments}
                   prevValue={prevMetrics.successfulPayments}
                   currencyCode={selectedCurrency}
+                  isCount
                   tooltip="Total count of customer checkout sessions successfully captured."
                   isSelected={activeMetric === 'count'}
                   onClick={() => setActiveMetric('count')}

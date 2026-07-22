@@ -62,9 +62,8 @@ const PAYMENT_METHODS: Array<'card' | 'bank_transfer' | 'apple_pay' | 'google_pa
 
 /**
  * Generates mock transactions from 2 years ago up to 2026-07-10 (the current simulated time)
- * Scaled precisely so that the gross revenue is exactly 33,435.54 USD per month,
- * with an average succeeded/refunded transaction size of exactly $37.5258 (approx 891 payments/month).
- * Supports custom simulation targets via config.
+ * Each transaction amount is randomized between $2,000 and $15,000.
+ * Supports custom simulation targets via config, which override the natural totals.
  */
 export function generateMockTransactions(config?: {
   customRevenue?: number;
@@ -78,18 +77,23 @@ export function generateMockTransactions(config?: {
   const limitStart = new Date('2024-07-10T00:00:00Z');
   const limitEnd = new Date('2026-07-10T23:59:59Z');
   
-  let TARGET_MONTHLY_REVENUE = 33435.54;
-  let TARGET_MONTHLY_COUNT = 891; // 33,435.54 / 891 = $37.5258 average payment (fits 37.50-37.57 range perfectly!)
-  
-  if (config && config.customRevenue !== undefined && config.customDays !== undefined && config.customDays > 0) {
-    const dailyRevenue = config.customRevenue / config.customDays;
+  const MIN_TX_AMOUNT = 2000;
+  const MAX_TX_AMOUNT = 15000;
+  const AVG_TX_AMOUNT = (MIN_TX_AMOUNT + MAX_TX_AMOUNT) / 2; // 8,500 midpoint
+
+  let TARGET_MONTHLY_COUNT = 891;
+  const hasCustomTarget = !!(config && config.customRevenue !== undefined && config.customDays !== undefined && config.customDays > 0);
+  let TARGET_MONTHLY_REVENUE = TARGET_MONTHLY_COUNT * AVG_TX_AMOUNT;
+
+  if (hasCustomTarget && config) {
+    const dailyRevenue = config.customRevenue! / config.customDays!;
     TARGET_MONTHLY_REVENUE = dailyRevenue * 30.4375; // average days in a month for smooth distribution
     if (config.customCount !== undefined && config.customCount > 0) {
-      const dailyCount = config.customCount / config.customDays;
+      const dailyCount = config.customCount / config.customDays!;
       TARGET_MONTHLY_COUNT = Math.max(1, Math.round(dailyCount * 30.4375));
     } else {
-      // Keep average payment size centered on $37.5258
-      TARGET_MONTHLY_COUNT = Math.max(1, Math.round(TARGET_MONTHLY_REVENUE / 37.5258));
+      // Keep average payment size centered on the configured range's midpoint
+      TARGET_MONTHLY_COUNT = Math.max(1, Math.round(TARGET_MONTHLY_REVENUE / AVG_TX_AMOUNT));
     }
   }
   
@@ -126,11 +130,11 @@ export function generateMockTransactions(config?: {
     const monthTxs: Transaction[] = [];
     let rawAmountSum = 0;
 
-    // Generate normal-like transaction amounts around $37.50
+    // Generate transaction amounts randomized between $2,000 and $15,000
     for (let i = 0; i < targetCount; i++) {
       const customerIdx = Math.floor(rand() * CUSTOMERS.length);
       const customer = CUSTOMERS[customerIdx];
-      
+
       const productIdx = Math.floor(rand() * PRODUCTS.length);
       const product = PRODUCTS[productIdx];
 
@@ -142,8 +146,7 @@ export function generateMockTransactions(config?: {
       // 4% refunded, 96% succeeded
       const status: Transaction['status'] = rand() < 0.04 ? 'refunded' : 'succeeded';
 
-      // Generate random variance around the $37.50 target base
-      const baseAmountUSD = 25.0 + rand() * 25.0; // Mean is exactly 37.50
+      const baseAmountUSD = MIN_TX_AMOUNT + rand() * (MAX_TX_AMOUNT - MIN_TX_AMOUNT);
       rawAmountSum += baseAmountUSD;
 
       currentId++;
@@ -161,20 +164,28 @@ export function generateMockTransactions(config?: {
       });
     }
 
-    // Adjust/scale transaction values to match the target gross revenue perfectly
-    let runningSum = 0;
-    const scaleFactor = targetRevenue / rawAmountSum;
+    if (hasCustomTarget) {
+      // Admin set an explicit target revenue: scale transactions to match it exactly
+      let runningSum = 0;
+      const scaleFactor = targetRevenue / rawAmountSum;
 
-    monthTxs.forEach((tx, idx) => {
-      if (idx === monthTxs.length - 1) {
-        tx.amount = Math.round((targetRevenue - runningSum) * 100) / 100;
-      } else {
-        const scaledAmt = Math.round(tx.amount * scaleFactor * 100) / 100;
-        tx.amount = Math.max(1.0, scaledAmt);
-        runningSum += tx.amount;
-      }
-      tx.fee = Math.round((tx.amount * 0.029 + 0.3) * 100) / 100;
-    });
+      monthTxs.forEach((tx, idx) => {
+        if (idx === monthTxs.length - 1) {
+          tx.amount = Math.round((targetRevenue - runningSum) * 100) / 100;
+        } else {
+          const scaledAmt = Math.round(tx.amount * scaleFactor * 100) / 100;
+          tx.amount = Math.max(1.0, scaledAmt);
+          runningSum += tx.amount;
+        }
+        tx.fee = Math.round((tx.amount * 0.029 + 0.3) * 100) / 100;
+      });
+    } else {
+      // No custom target: keep each transaction's organic $2,000-$15,000 amount
+      monthTxs.forEach((tx) => {
+        tx.amount = Math.round(tx.amount * 100) / 100;
+        tx.fee = Math.round((tx.amount * 0.029 + 0.3) * 100) / 100;
+      });
+    }
 
     // Generate natural failed transactions (~4% failure rate)
     const failedCount = Math.round(targetCount * 0.04);
@@ -190,7 +201,7 @@ export function generateMockTransactions(config?: {
       currentId++;
       monthTxs.push({
         id: `ch_${currentId.toString(36).toUpperCase()}`,
-        amount: Math.round((25.0 + rand() * 25.0) * 100) / 100,
+        amount: Math.round((MIN_TX_AMOUNT + rand() * (MAX_TX_AMOUNT - MIN_TX_AMOUNT)) * 100) / 100,
         currency: nativeCurrency.code,
         status: 'failed',
         customerName: customer.name,
