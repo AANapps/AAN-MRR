@@ -11,6 +11,7 @@ import BalancesTab from './components/BalancesTab';
 import CustomersTab from './components/CustomersTab';
 import ProductsTab from './components/ProductsTab';
 import DevelopersTab from './components/DevelopersTab';
+import AdminPanel from './components/AdminPanel';
 import { HelpCircle, Activity, Sparkles, Search, Bell } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -44,6 +45,10 @@ export default function App() {
 
   // Toast notification state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Admin console: manual transaction CRUD + privacy redaction toggle
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [redactMode, setRedactMode] = useState(false);
 
   // Custom simulation target states
   const [customConfig, setCustomConfig] = useState<CustomConfig | null>(() => {
@@ -233,6 +238,16 @@ export default function App() {
     showToast(`💰 Payment of ${convertedVal} captured from ${randomNames[idx]}!`);
   };
 
+  // Admin: manually add a fully custom transaction record
+  const handleAddTransaction = (tx: Transaction) => {
+    setTransactions(prev => [tx, ...prev]);
+  };
+
+  // Admin: edit any field on an existing transaction record
+  const handleUpdateTransaction = (id: string, updates: Partial<Transaction>) => {
+    setTransactions(prev => prev.map(tx => (tx.id === id ? { ...tx, ...updates } : tx)));
+  };
+
   // CSV Exporter
   const handleExportCSV = () => {
     if (filteredTransactions.length === 0) {
@@ -337,9 +352,9 @@ export default function App() {
 
                 <a
                   href="#help"
-                  onClick={(e) => { e.preventDefault(); showToast('📖 Documentation is available in the Developers tab.'); }}
+                  onClick={(e) => { e.preventDefault(); setIsAdminOpen(true); }}
                   className="text-neutral-400 hover:text-neutral-700 p-1.5 rounded-lg hover:bg-neutral-100 transition"
-                  title="Help Docs"
+                  title="Admin Console"
                 >
                   <HelpCircle className="h-4.5 w-4.5" />
                 </a>
@@ -495,6 +510,7 @@ export default function App() {
                 transactions={filteredTransactions}
                 currencyCode={selectedCurrency}
                 showToast={showToast}
+                redactMode={redactMode}
               />
             </div>
           )}
@@ -505,6 +521,7 @@ export default function App() {
               transactions={filteredTransactions}
               currencyCode={selectedCurrency}
               showToast={showToast}
+              redactMode={redactMode}
             />
           )}
 
@@ -554,6 +571,18 @@ export default function App() {
         </div>
 
       </div>
+
+      {/* Admin console modal */}
+      <AdminPanel
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
+        transactions={transactions}
+        onAddTransaction={handleAddTransaction}
+        onUpdateTransaction={handleUpdateTransaction}
+        redactMode={redactMode}
+        setRedactMode={setRedactMode}
+        showToast={showToast}
+      />
 
       {/* Floating active alerts */}
       <AnimatePresence>

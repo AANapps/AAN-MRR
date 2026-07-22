@@ -9,11 +9,13 @@ interface RecentPaymentsTableProps {
   currencyCode: string;
   id: string;
   showToast: (message: string) => void;
+  redactMode?: boolean;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function RecentPaymentsTable({ transactions, currencyCode, id, showToast }: RecentPaymentsTableProps) {
+export default function RecentPaymentsTable({ transactions, currencyCode, id, showToast, redactMode = false }: RecentPaymentsTableProps) {
+  const redactClass = redactMode ? 'blur-[4px] select-none' : '';
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -197,7 +199,7 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id, sh
                         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-100 font-mono text-xs font-semibold text-neutral-600">
                           {getInitials(tx.customerName)}
                         </div>
-                        <div className="flex flex-col">
+                        <div className={`flex flex-col transition-[filter] duration-150 ${redactClass}`}>
                           <span className="font-medium text-neutral-800">{tx.customerName}</span>
                           <span className="text-[11px] text-neutral-500 leading-tight">{tx.customerEmail}</span>
                         </div>
@@ -210,7 +212,7 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id, sh
                     </td>
 
                     {/* Payment Method */}
-                    <td className="py-3 px-5 text-neutral-500 font-mono text-xs">
+                    <td className={`py-3 px-5 text-neutral-500 font-mono text-xs transition-[filter] duration-150 ${redactClass}`}>
                       {getPaymentMethodLabel(tx.paymentMethod)}
                     </td>
 
@@ -354,10 +356,10 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id, sh
                   <h5 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono mb-2">Customer & Account</h5>
                   <div className="rounded-xl border border-neutral-100 p-4 space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 text-xs font-semibold font-mono">
+                      <div className={`flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 text-xs font-semibold font-mono transition-[filter] duration-150 ${redactClass}`}>
                         {getInitials(selectedTx.customerName)}
                       </div>
-                      <div className="flex flex-col">
+                      <div className={`flex flex-col transition-[filter] duration-150 ${redactClass}`}>
                         <span className="text-sm font-semibold text-neutral-800">{selectedTx.customerName}</span>
                         <span className="text-xs text-neutral-500">{selectedTx.customerEmail}</span>
                       </div>
@@ -375,7 +377,7 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id, sh
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-neutral-400">Payment Type</span>
-                      <span className="text-neutral-700 capitalize">{selectedTx.paymentMethod.replace('_', ' ')}</span>
+                      <span className={`text-neutral-700 capitalize transition-[filter] duration-150 ${redactClass}`}>{selectedTx.paymentMethod.replace('_', ' ')}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-neutral-400">Descriptor</span>
