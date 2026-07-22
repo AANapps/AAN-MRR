@@ -88,7 +88,7 @@ export default function DevelopersTab({
       const endpoints = [
         { method: 'POST' as const, path: '/v1/payment_intents', code: 200, req: { amount: Math.floor(Math.random()*200+10)*100, currency: 'usd' }, res: { status: 'succeeded' } },
         { method: 'GET' as const, path: '/v1/customers', code: 200, req: undefined, res: { object: 'list', count: 16 } },
-        { method: 'POST' as const, path: '/v1/customers', code: 201, req: { email: 'client@new-saas.com', name: 'Sandbox User' }, res: { id: 'cus_NEW_' + Math.random().toString(36).substring(2,6).toUpperCase() } },
+        { method: 'POST' as const, path: '/v1/customers', code: 201, req: { email: 'client@new-saas.com', name: 'New Customer' }, res: { id: 'cus_NEW_' + Math.random().toString(36).substring(2,6).toUpperCase() } },
         { method: 'GET' as const, path: '/v1/balance', code: 200, req: undefined, res: { object: 'balance', available: [{ amount: 48920, currency: 'usd' }] } }
       ];
 
@@ -124,7 +124,7 @@ export default function DevelopersTab({
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Developers Console</h2>
-        <p className="text-xs text-neutral-500">Access API keys, monitor real-time server traffic, and manage simulation targets</p>
+        <p className="text-xs text-neutral-500">Access API keys, monitor real-time server traffic, and manage revenue targets</p>
       </div>
 
       {/* Grid: API keys + Simulation settings */}
@@ -143,7 +143,7 @@ export default function DevelopersTab({
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-neutral-500">Publishable Key</span>
                   <button
-                    onClick={() => handleCopy('pk_test_51Ng83bJH239Yskdjf89234skldjhfh2', 'Publishable Key')}
+                    onClick={() => handleCopy('pk_live_51Ng83bJH239Yskdjf89234skldjhfh2', 'Publishable Key')}
                     className="text-[10px] font-mono text-indigo-600 hover:underline"
                   >
                     {copiedKey === 'Publishable Key' ? 'Copied!' : 'Copy Key'}
@@ -151,7 +151,7 @@ export default function DevelopersTab({
                 </div>
                 <div className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 font-mono text-xs text-neutral-700">
                   <span className="flex-1 overflow-x-auto whitespace-nowrap">
-                    {revealPublishable ? 'pk_test_51Ng83bJH239Yskdjf89234skldjhfh2' : 'pk_test_••••••••••••••••••••••••••••••••'}
+                    {revealPublishable ? 'pk_live_51Ng83bJH239Yskdjf89234skldjhfh2' : 'pk_live_••••••••••••••••••••••••••••••••'}
                   </span>
                   <button
                     onClick={() => setRevealPublishable(!revealPublishable)}
@@ -270,14 +270,14 @@ export default function DevelopersTab({
           </div>
         </div>
 
-        {/* Sandbox Configurator Card */}
+        {/* Data Configurator Card */}
         <div className="rounded-xl border border-neutral-200 bg-white p-5 space-y-4 shadow-xs">
           <h3 className="text-sm font-semibold text-neutral-900 flex items-center gap-1.5 border-b border-neutral-100 pb-3">
-            <Settings className="h-4 w-4 text-neutral-500" /> Simulation Parameters
+            <Settings className="h-4 w-4 text-neutral-500" /> Revenue Engine Settings
           </h3>
 
           <p className="text-xs text-neutral-500 leading-normal">
-            Adjust the mock engine target parameters below. The transaction engine will dynamically scatter schedules, prices, currencies, and customer orders to perfectly match these totals.
+            Adjust the revenue engine target parameters below. The transaction engine will dynamically scatter schedules, prices, currencies, and customer orders to perfectly match these totals.
           </p>
 
           <div className="space-y-4 pt-2">
@@ -333,7 +333,7 @@ export default function DevelopersTab({
                 <ShieldAlert className="h-4 w-4 text-indigo-500 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-semibold">Custom configuration active:</span>
-                  <p className="mt-0.5 text-indigo-600">The simulated database has been repopulated with {customConfig.customCount} charges totaling {formatCurrency(customConfig.customRevenue, currencyCode)} over {customConfig.customDays} days.</p>
+                  <p className="mt-0.5 text-indigo-600">The database has been repopulated with {customConfig.customCount} charges totaling {formatCurrency(customConfig.customRevenue, currencyCode)} over {customConfig.customDays} days.</p>
                 </div>
               </div>
             )}

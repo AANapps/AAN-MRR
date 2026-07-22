@@ -121,7 +121,7 @@ export default function CustomersTab({ transactions, currencyCode, showToast }: 
       totalSpend: 0,
       paymentsCount: 0,
       createdDate: new Date().toISOString(),
-      description: newCustomerDesc || 'Simulated dashboard account'
+      description: newCustomerDesc || 'Standard customer account'
     };
 
     const nextCustom = [newCust, ...customCustomers];

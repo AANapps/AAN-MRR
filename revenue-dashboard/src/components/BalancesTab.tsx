@@ -23,7 +23,7 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
   const netPool = Math.max(0, grossRevenue - feesPaid);
   
   const [availableToPayout, setAvailableToPayout] = useState<number>(() => {
-    const saved = localStorage.getItem('stripe_available_payout_pool');
+    const saved = localStorage.getItem('adastra_available_payout_pool');
     return saved ? parseFloat(saved) : Math.round(netPool * 0.35 * 100) / 100;
   });
 
@@ -32,7 +32,7 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
   );
 
   const [payouts, setPayouts] = useState<Payout[]>(() => {
-    const saved = localStorage.getItem('stripe_simulated_payouts_v1');
+    const saved = localStorage.getItem('adastra_payouts_v1');
     if (saved) return JSON.parse(saved);
 
     // Default seeded payouts
@@ -52,7 +52,7 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
 
     const payoutAmount = availableToPayout;
     const newPayout: Payout = {
-      id: `po_SIM_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      id: `po_${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
       amount: payoutAmount,
       status: 'in_transit',
       date: new Date().toISOString(),
@@ -61,18 +61,17 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
 
     const updatedPayouts = [newPayout, ...payouts];
     setPayouts(updatedPayouts);
-    localStorage.setItem('stripe_simulated_payouts_v1', JSON.stringify(updatedPayouts));
+    localStorage.setItem('adastra_payouts_v1', JSON.stringify(updatedPayouts));
 
     setAvailableToPayout(0);
-    localStorage.setItem('stripe_available_payout_pool', '0');
+    localStorage.setItem('adastra_available_payout_pool', '0');
 
     showToast(`🏦 Payout of ${formatCurrency(payoutAmount, currencyCode)} initiated to your bank!`);
 
-    // Simulate arriving in 3 seconds!
     setTimeout(() => {
       setPayouts(prev => {
         const next = prev.map(p => p.id === newPayout.id ? { ...p, status: 'paid' as const } : p);
-        localStorage.setItem('stripe_simulated_payouts_v1', JSON.stringify(next));
+        localStorage.setItem('adastra_payouts_v1', JSON.stringify(next));
         return next;
       });
       showToast(`✅ Payout ${newPayout.id} arrived successfully at Chase Bank!`);
@@ -83,8 +82,8 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
     const topUp = Math.round((Math.random() * 5000 + 1000) * 100) / 100;
     const nextVal = Math.round((availableToPayout + topUp) * 100) / 100;
     setAvailableToPayout(nextVal);
-    localStorage.setItem('stripe_available_payout_pool', nextVal.toString());
-    showToast(`💰 Simulated top-up of ${formatCurrency(topUp, currencyCode)} added to your available payout balance!`);
+    localStorage.setItem('adastra_available_payout_pool', nextVal.toString());
+    showToast(`💰 Top-up of ${formatCurrency(topUp, currencyCode)} added to your available payout balance!`);
   };
 
   const totalPaidOut = useMemo(() => {
@@ -108,13 +107,13 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
             onClick={handleAddFunds}
             className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 active:scale-97 transition"
           >
-            Add Simulated Funds
+            Add Funds
           </button>
-          
+
           <button
             onClick={handleInstantPayout}
             disabled={availableToPayout <= 0}
-            className="flex items-center gap-1.5 rounded-lg border border-neutral-900 bg-neutral-900 text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-neutral-850 active:scale-97 transition disabled:opacity-50 disabled:pointer-events-none"
+            className="flex items-center gap-1.5 rounded-lg border border-brand bg-brand text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-brand-hover hover:border-brand-hover active:scale-97 transition disabled:opacity-50 disabled:pointer-events-none"
           >
             <Landmark className="h-4 w-4" />
             <span>Payout Available Balance</span>
@@ -159,7 +158,7 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
         <div className="rounded-xl border border-neutral-200 bg-white p-5 space-y-3 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider font-mono">Total Paid Out</span>
-            <span className="inline-flex h-2 w-2 rounded-full bg-indigo-500" />
+            <span className="inline-flex h-2 w-2 rounded-full bg-brand" />
           </div>
           <div>
             <p className="font-mono text-3xl font-bold text-neutral-900">
@@ -177,7 +176,7 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
         <div className="lg:col-span-2 rounded-xl border border-neutral-200 bg-white shadow-xs overflow-hidden flex flex-col">
           <div className="border-b border-neutral-100 p-5">
             <h3 className="text-sm font-semibold text-neutral-900">Payout Logs</h3>
-            <p className="text-xs text-neutral-500">History of transfers from your Stripe balance</p>
+            <p className="text-xs text-neutral-500">History of transfers from your balance</p>
           </div>
 
           <div className="overflow-x-auto flex-1">
@@ -257,14 +256,14 @@ export default function BalancesTab({ grossRevenue, feesPaid, currencyCode, show
               <span className="text-[10px] font-mono font-semibold text-neutral-400 block">INSTANT PAYOUT SPEED</span>
               <p className="text-xs font-semibold text-neutral-800">Instant (Within 30 minutes)</p>
               <p className="text-[11px] text-neutral-500">
-                1% transaction surcharge fee applies. Enabled on sandbox mode for real-time testing.
+                1% transaction surcharge fee applies for instant transfers.
               </p>
             </div>
 
             <div className="border-t border-neutral-100 pt-3 flex items-start gap-2 text-neutral-500 text-[11px]">
-              <Sparkles className="h-4 w-4 text-violet-500 shrink-0 mt-0.5" />
+              <Sparkles className="h-4 w-4 text-brand shrink-0 mt-0.5" />
               <span>
-                Initiating an Instant Payout dynamically triggers a simulated settlement flow that reconciles your ledger logs automatically.
+                Initiating an Instant Payout triggers a settlement flow that reconciles your ledger automatically.
               </span>
             </div>
           </div>

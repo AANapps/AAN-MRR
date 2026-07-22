@@ -198,7 +198,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
 
           <div className="space-y-4">
             <p className="text-xs text-neutral-500 leading-normal">
-              Based on active simulations, subscription recurring charges contribute to the majority of consistent growth. Keep adding custom products to monitor transaction splits.
+              Based on current activity, subscription recurring charges contribute to the majority of consistent growth. Keep adding custom products to monitor transaction splits.
             </p>
 
             <div className="space-y-3 pt-2">
@@ -222,7 +222,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
             <div className="border-t border-neutral-100 pt-3 text-[11px] text-neutral-400 flex gap-1.5">
               <Sparkles className="h-4 w-4 text-violet-500 shrink-0 mt-0.5" />
               <span>
-                New custom products created here are instantly made available in the sandbox checkout transaction generators.
+                New custom products created here are instantly made available at checkout.
               </span>
             </div>
           </div>

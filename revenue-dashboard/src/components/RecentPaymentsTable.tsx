@@ -8,11 +8,12 @@ interface RecentPaymentsTableProps {
   transactions: Transaction[];
   currencyCode: string;
   id: string;
+  showToast: (message: string) => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function RecentPaymentsTable({ transactions, currencyCode, id }: RecentPaymentsTableProps) {
+export default function RecentPaymentsTable({ transactions, currencyCode, id, showToast }: RecentPaymentsTableProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -114,7 +115,7 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id }: 
               placeholder="Search payments..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-neutral-200 bg-white py-1.5 pr-3 pl-9 text-sm text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 sm:w-60"
+              className="w-full rounded-lg border border-neutral-200 bg-white py-1.5 pr-3 pl-9 text-sm text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-brand focus:ring-1 focus:ring-brand sm:w-60"
             />
           </div>
 
@@ -332,14 +333,14 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id }: 
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-neutral-500 font-medium flex items-center gap-1">
                       <Percent className="h-3 w-3" />
-                      Stripe Processing Fee
+                      Processing Fee
                     </span>
                     <span className="font-mono text-neutral-800">
                       {formatCurrency(convertUSDToCurrency(selectedTx.fee, currencyCode), currencyCode)}
                     </span>
                   </div>
                   <div className="border-t border-neutral-200/60 my-2 pt-2 flex items-center justify-between text-xs font-semibold">
-                    <span className="text-neutral-800">Simulated Net Settle</span>
+                    <span className="text-neutral-800">Net Settlement</span>
                     <span className="font-mono text-neutral-950">
                       {selectedTx.status === 'succeeded' 
                         ? formatCurrency(convertUSDToCurrency(selectedTx.amount - selectedTx.fee, currencyCode), currencyCode) 
@@ -383,7 +384,7 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id }: 
                     <div className="flex items-center justify-between border-t border-neutral-100 pt-2 text-[10px]">
                       <span className="text-neutral-400 flex items-center gap-1">
                         <ShieldCheck className="h-3 w-3 text-emerald-500" />
-                        Radar Risk Score
+                        Fraud Risk Score
                       </span>
                       <span className="text-emerald-700 font-bold bg-emerald-50 px-1 py-0.5 rounded">1 (Very Low Risk)</span>
                     </div>
@@ -394,7 +395,7 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id }: 
               {/* PDF / Invoice Actions */}
               <div className="border-t border-neutral-100 pt-4 flex gap-2.5 mt-4">
                 <button
-                  onClick={() => alert('Download receipt simulated!')}
+                  onClick={() => showToast('📄 Receipt download started.')}
                   className="flex-1 rounded-lg border border-neutral-200 bg-white py-2 text-center text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition flex items-center justify-center gap-1.5"
                 >
                   <Download className="h-3.5 w-3.5" />

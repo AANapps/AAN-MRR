@@ -4,6 +4,9 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-brand: #635bff;
+  --color-brand-hover: #5851e0;
+  --color-brand-light: #f5f4ff;
 }
 
 /* Base resets or custom scrollbars if needed */

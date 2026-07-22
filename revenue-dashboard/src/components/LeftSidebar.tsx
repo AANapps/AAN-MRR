@@ -1,10 +1,8 @@
-import { Home, CreditCard, Landmark, Users, Package, Code, Menu, X, HelpCircle, User, Bell } from 'lucide-react';
+import { Home, CreditCard, Landmark, Users, Package, Code, Menu, X, ChevronDown } from 'lucide-react';
 
 interface LeftSidebarProps {
   currentTab: 'home' | 'payments' | 'balances' | 'customers' | 'products' | 'developers';
   setCurrentTab: (tab: 'home' | 'payments' | 'balances' | 'customers' | 'products' | 'developers') => void;
-  isTestMode: boolean;
-  setIsTestMode: (val: boolean) => void;
   isOpen: boolean;
   setIsOpen: (val: boolean) => void;
   userEmail: string;
@@ -13,8 +11,6 @@ interface LeftSidebarProps {
 export default function LeftSidebar({
   currentTab,
   setCurrentTab,
-  isTestMode,
-  setIsTestMode,
   isOpen,
   setIsOpen,
   userEmail
@@ -32,16 +28,11 @@ export default function LeftSidebar({
     <>
       {/* Mobile Top Navigation Header */}
       <div className="flex h-14 items-center justify-between border-b border-neutral-200 bg-white px-4 lg:hidden shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded bg-indigo-600 font-mono text-xs font-bold text-white shadow-xs">
+        <div className="flex items-center gap-2">
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-brand font-mono text-xs font-bold text-white">
             S
           </div>
-          <span className="text-sm font-bold text-neutral-900 tracking-tight font-mono">stripe</span>
-          {isTestMode && (
-            <span className="rounded bg-amber-100 px-1.5 py-0.5 font-mono text-[9px] font-bold text-amber-800">
-              TEST DATA
-            </span>
-          )}
+          <span className="text-sm font-semibold text-neutral-900 tracking-tight">Adastra Network</span>
         </div>
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -51,45 +42,35 @@ export default function LeftSidebar({
         </button>
       </div>
 
-      {/* Sidebar Drawer Panel */}
+      {/* Sidebar Panel */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-[#1F2231] bg-[#0A0D14] text-neutral-300 transition-transform duration-300 lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-60 flex-col border-r border-neutral-200 bg-white text-neutral-700 transition-transform duration-300 lg:static lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Company account Switcher & Logo */}
-        <div className="border-b border-[#1F2231] px-5 py-4 flex flex-col gap-2.5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 font-mono text-sm font-bold text-white shadow-md">
+        {/* Workspace switcher */}
+        <div className="border-b border-neutral-200 px-3 py-3 shrink-0">
+          <div className="flex items-center justify-between gap-1">
+            <button className="flex flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-neutral-100 transition">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand font-mono text-xs font-bold text-white">
                 S
               </div>
-              <span className="text-base font-extrabold text-white tracking-tight font-sans">stripe</span>
-            </div>
-            
-            {/* Close button inside sidebar on Mobile */}
+              <span className="flex-1 truncate text-sm font-semibold text-neutral-900">Adastra Network</span>
+              <ChevronDown className="h-3.5 w-3.5 shrink-0 text-neutral-400" />
+            </button>
+
+            {/* Close button on Mobile */}
             <button
               onClick={() => setIsOpen(false)}
-              className="rounded-lg border border-neutral-800 p-1 text-neutral-400 hover:bg-neutral-900 lg:hidden"
+              className="rounded-lg border border-neutral-200 p-1 text-neutral-400 hover:bg-neutral-100 lg:hidden"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
-
-          {/* Business selector dropdown design */}
-          <div className="flex items-center justify-between rounded-lg bg-neutral-900 hover:bg-neutral-850 px-3 py-1.5 cursor-pointer border border-neutral-800 transition duration-150">
-            <div className="flex flex-col">
-              <span className="text-[11px] font-bold text-white leading-tight">Adastra Network</span>
-              <span className="text-[9px] text-neutral-400 font-mono">ID: acct_8741392A</span>
-            </div>
-            <div className="flex h-4 w-4 flex-col items-center justify-center">
-              <span className="border-t-4 border-r-4 border-transparent border-t-neutral-400 w-1.5 h-1.5 transform rotate-45 -mt-0.5" />
-            </div>
-          </div>
         </div>
 
         {/* Navigation links */}
-        <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto">
+        <nav className="flex-1 space-y-0.5 px-2.5 py-3 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = currentTab === item.id;
             return (
@@ -99,62 +80,32 @@ export default function LeftSidebar({
                   setCurrentTab(item.id);
                   setIsOpen(false); // Close on mobile navigation click
                 }}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold tracking-wide transition duration-150 ${
+                className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition duration-100 ${
                   isActive
-                    ? 'bg-neutral-900 text-white shadow-xs border border-neutral-800/60'
-                    : 'text-neutral-400 hover:bg-neutral-900/40 hover:text-white'
+                    ? 'bg-brand-light text-brand font-semibold'
+                    : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
                 }`}
               >
-                <span className={isActive ? 'text-indigo-400' : 'text-neutral-500'}>
+                <span className={isActive ? 'text-brand' : 'text-neutral-400'}>
                   {item.icon}
                 </span>
                 <span>{item.label}</span>
-                {item.id === 'developers' && (
-                  <span className="ml-auto rounded-full bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 text-[9px] font-bold text-neutral-400 font-mono">
-                    SANDBOX
-                  </span>
-                )}
               </button>
             );
           })}
         </nav>
 
-        {/* Footer actions & Environment toggles */}
-        <div className="border-t border-[#1F2231] p-4 space-y-4 shrink-0 bg-[#07090F]">
-          
-          {/* Working Test Mode Switch */}
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-[11px] font-semibold text-white tracking-wide">Test Mode</span>
-              <span className="text-[9px] text-neutral-400">Using simulated events</span>
-            </div>
-            <button
-              onClick={() => {
-                setIsTestMode(!isTestMode);
-                // Prompt user visually
-              }}
-              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-                isTestMode ? 'bg-amber-500' : 'bg-neutral-800'
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
-                  isTestMode ? 'translate-x-4' : 'translate-x-0'
-                }`}
-              />
-            </button>
-          </div>
-
-          {/* User profile block */}
-          <div className="flex items-center gap-2.5 rounded-lg border border-neutral-900 bg-neutral-950 p-2 text-xs">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-900 border border-neutral-800 font-bold text-indigo-400 text-[10px] uppercase font-mono">
+        {/* User profile footer */}
+        <div className="border-t border-neutral-200 p-3 shrink-0">
+          <button className="flex w-full items-center gap-2.5 rounded-lg p-1.5 text-left hover:bg-neutral-100 transition">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-light font-bold text-brand text-[10px] uppercase">
               AD
             </div>
-            <div className="flex flex-col truncate">
-              <span className="font-semibold text-white truncate text-[10px]">{userEmail}</span>
-              <span className="text-[8px] text-neutral-500 font-mono leading-none">ROLE: ADMIN</span>
+            <div className="flex flex-1 flex-col truncate">
+              <span className="font-medium text-neutral-800 truncate text-xs">{userEmail}</span>
+              <span className="text-[10px] text-neutral-400 leading-none">Admin</span>
             </div>
-          </div>
+          </button>
         </div>
       </aside>
 
@@ -162,7 +113,7 @@ export default function LeftSidebar({
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-30 bg-neutral-950/40 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-30 bg-neutral-950/20 backdrop-blur-xs lg:hidden"
         />
       )}
     </>

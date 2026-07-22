@@ -136,8 +136,8 @@ export default function ChartContainer({
               <AreaChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#171717" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#171717" stopOpacity={0.01} />
+                    <stop offset="5%" stopColor="#635bff" stopOpacity={0.18} />
+                    <stop offset="95%" stopColor="#635bff" stopOpacity={0.01} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
@@ -159,11 +159,11 @@ export default function ChartContainer({
                 <Area
                   type="linear"
                   dataKey={activeMetric}
-                  stroke="#171717"
+                  stroke="#635bff"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorMetric)"
-                  activeDot={{ r: 5, stroke: '#171717', strokeWidth: 1, fill: '#ffffff' }}
+                  activeDot={{ r: 5, stroke: '#635bff', strokeWidth: 1, fill: '#ffffff' }}
                 />
               </AreaChart>
             ) : (
@@ -186,7 +186,7 @@ export default function ChartContainer({
                 <Tooltip content={<CustomTooltip />} />
                 <Bar
                   dataKey={activeMetric}
-                  fill="#171717"
+                  fill="#635bff"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={45}
                 />

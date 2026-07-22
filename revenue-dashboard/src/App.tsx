@@ -11,7 +11,7 @@ import BalancesTab from './components/BalancesTab';
 import CustomersTab from './components/CustomersTab';
 import ProductsTab from './components/ProductsTab';
 import DevelopersTab from './components/DevelopersTab';
-import { HelpCircle, Activity, Sparkles } from 'lucide-react';
+import { HelpCircle, Activity, Sparkles, Search, Bell } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 interface CustomConfig {
@@ -23,7 +23,6 @@ interface CustomConfig {
 export default function App() {
   // Navigation State
   const [currentTab, setCurrentTab] = useState<'home' | 'payments' | 'balances' | 'customers' | 'products' | 'developers'>('home');
-  const [isTestMode, setIsTestMode] = useState<boolean>(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   // Primary state: seeded mock transaction database
@@ -111,7 +110,7 @@ export default function App() {
     setCustomConfig(null);
     localStorage.removeItem('stripe_custom_config');
     setTransactions(generateMockTransactions());
-    showToast('⚙️ Reset to baseline Stripe demonstration data.');
+    showToast('⚙️ Reset to default revenue baseline.');
   };
 
   // Auto-tune chart interval based on selected preset
@@ -215,7 +214,7 @@ export default function App() {
     const nativeCurr = nativeCurrencies[Math.floor(Math.random() * nativeCurrencies.length)];
 
     const newTx: Transaction = {
-      id: `ch_SIM_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      id: `ch_${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
       amount: priceUSD,
       currency: nativeCurr,
       status: 'succeeded',
@@ -231,7 +230,7 @@ export default function App() {
     setTransactions(prev => [newTx, ...prev]);
     
     const convertedVal = formatCurrency(convertUSDToCurrency(priceUSD, selectedCurrency), selectedCurrency);
-    showToast(`💰 Simulated payment of ${convertedVal} captured from ${randomNames[idx]}!`);
+    showToast(`💰 Payment of ${convertedVal} captured from ${randomNames[idx]}!`);
   };
 
   // CSV Exporter
@@ -276,75 +275,77 @@ export default function App() {
       case 'balances': return { title: 'Balances', subtitle: 'Funds settled, available, and historique logs' };
       case 'customers': return { title: 'Customers', subtitle: 'Review active subscriber directories and accounts' };
       case 'products': return { title: 'Products', subtitle: 'Subscription products list and pricing catalog' };
-      case 'developers': return { title: 'Developers', subtitle: 'API logs, keys, and simulation setup sandbox' };
+      case 'developers': return { title: 'Developers', subtitle: 'API logs, keys, and account configuration' };
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-[#F6F8FA] text-neutral-900 font-sans">
-      
-      {/* Sidebar navigation */}
-      <LeftSidebar
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
-        isTestMode={isTestMode}
-        setIsTestMode={setIsTestMode}
-        isOpen={isSidebarOpen}
-        setIsOpen={setIsSidebarOpen}
-        userEmail="info@adastranetwork.co.uk"
-      />
+    <div className="flex flex-col min-h-screen bg-[#F6F8FA] text-neutral-900 font-sans">
 
-      {/* Main Workspace Frame container */}
-      <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
-        
-        {/* Working Orange Banner indicating Test Data */}
-        {isTestMode && (
-          <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-2 flex items-center justify-between text-[11px] text-amber-800 shrink-0 select-none">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-              <span className="font-semibold font-mono tracking-wider text-[10px] uppercase">Test Mode Active</span>
-              <span className="hidden sm:inline text-neutral-500">| Standard settlement clearance schedules and webhook logs are in active simulation.</span>
-            </div>
-            <span className="font-semibold bg-amber-500/20 text-amber-900 rounded px-1.5 py-0.5 text-[9px] font-mono">SANDBOX_MODE</span>
-          </div>
-        )}
+      <div className="flex flex-1 min-h-0 flex-col lg:flex-row">
 
-        {/* Global Horizontal Header */}
-        <header className="border-b border-neutral-200 bg-white px-6 py-4 shrink-0 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-neutral-400 capitalize">Workspaces</span>
-                <span className="text-neutral-300 text-xs">/</span>
-                <h1 className="text-base font-bold text-neutral-900 tracking-tight">
+        {/* Sidebar navigation */}
+        <LeftSidebar
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+          userEmail="info@adastranetwork.co.uk"
+        />
+
+        {/* Main Workspace Frame container */}
+        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
+
+          {/* Global Horizontal Header */}
+          <header className="border-b border-neutral-200 bg-white px-6 py-3 shrink-0">
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="text-lg font-semibold text-neutral-900 tracking-tight">
                   {getBreadcrumbLabel().title}
                 </h1>
-              </div>
-              <p className="text-xs text-neutral-500 mt-0.5">{getBreadcrumbLabel().subtitle}</p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* System status beacon */}
-              <div className="hidden md:flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-100 px-2.5 py-1 text-[11px] text-emerald-800 font-medium">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                </span>
-                <span>Operational</span>
+                <p className="text-xs text-neutral-500 mt-0.5 truncate">{getBreadcrumbLabel().subtitle}</p>
               </div>
 
-              {/* Quick links */}
-              <a 
-                href="#help" 
-                onClick={(e) => { e.preventDefault(); showToast('📖 Documentation is pre-loaded inside Developer sandboxes!'); }}
-                className="text-neutral-400 hover:text-neutral-700 p-1.5 transition"
-                title="Help Docs"
+              {/* Command-palette style search, centered */}
+              <button
+                onClick={() => showToast('🔍 Search is coming soon.')}
+                className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs text-neutral-400 hover:border-neutral-300 hover:bg-white transition"
               >
-                <HelpCircle className="h-5 w-5" />
-              </a>
+                <Search className="h-3.5 w-3.5" />
+                <span className="flex-1 text-left">Search Adastra Network</span>
+                <span className="rounded border border-neutral-200 bg-white px-1 py-0.5 text-[10px] font-mono text-neutral-400">/</span>
+              </button>
+
+              <div className="flex items-center gap-1.5 shrink-0">
+                {/* Live status indicator */}
+                <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-800">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                  </span>
+                  All systems operational
+                </div>
+
+                <a
+                  href="#notifications"
+                  onClick={(e) => { e.preventDefault(); showToast('🔔 No new notifications.'); }}
+                  className="text-neutral-400 hover:text-neutral-700 p-1.5 rounded-lg hover:bg-neutral-100 transition"
+                  title="Notifications"
+                >
+                  <Bell className="h-4.5 w-4.5" />
+                </a>
+
+                <a
+                  href="#help"
+                  onClick={(e) => { e.preventDefault(); showToast('📖 Documentation is available in the Developers tab.'); }}
+                  className="text-neutral-400 hover:text-neutral-700 p-1.5 rounded-lg hover:bg-neutral-100 transition"
+                  title="Help Docs"
+                >
+                  <HelpCircle className="h-4.5 w-4.5" />
+                </a>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
         {/* Content view frame */}
         <main className="flex-1 p-6 space-y-6 max-w-7xl w-full mx-auto">
@@ -387,7 +388,7 @@ export default function App() {
                   value={metrics.netRevenue}
                   prevValue={prevMetrics.netRevenue}
                   currencyCode={selectedCurrency}
-                  tooltip="Calculated settle amount (Captured Payments minus estimated Stripe 2.9% + $0.30 fee, with refunded charges excluded)."
+                  tooltip="Calculated settle amount (Captured Payments minus estimated 2.9% + $0.30 processing fee, with refunded charges excluded)."
                   isSelected={activeMetric === 'net'}
                   onClick={() => setActiveMetric('net')}
                 />
@@ -427,7 +428,7 @@ export default function App() {
                 {/* Onboarding Checklist panel */}
                 <div className="md:col-span-2 rounded-xl border border-neutral-200 bg-white p-5 space-y-4 shadow-xs">
                   <h3 className="text-sm font-semibold text-neutral-900 flex items-center gap-1.5 border-b border-neutral-100 pb-3">
-                    <Sparkles className="h-4 w-4 text-violet-600 animate-pulse" /> Sandbox Checklist
+                    <Sparkles className="h-4 w-4 text-brand animate-pulse" /> Getting Started
                   </h3>
 
                   <div className="space-y-3.5">
@@ -448,9 +449,9 @@ export default function App() {
                     </div>
 
                     <div className="flex items-start gap-3">
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-[11px] font-bold text-indigo-700 font-mono border border-indigo-100">3</span>
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-light text-[11px] font-bold text-brand font-mono border border-brand/10">3</span>
                       <div className="text-xs">
-                        <span className="font-bold text-neutral-800 block">Simulate instant payout transfer</span>
+                        <span className="font-bold text-neutral-800 block">Send an instant payout transfer</span>
                         <p className="text-neutral-500">Navigate to the Balances tab to send available cash directly to linked bank accounts.</p>
                       </div>
                     </div>
@@ -493,6 +494,7 @@ export default function App() {
                 id="payments-table"
                 transactions={filteredTransactions}
                 currencyCode={selectedCurrency}
+                showToast={showToast}
               />
             </div>
           )}
@@ -502,6 +504,7 @@ export default function App() {
               id="payments-table-dedicated"
               transactions={filteredTransactions}
               currencyCode={selectedCurrency}
+              showToast={showToast}
             />
           )}
 
@@ -547,6 +550,8 @@ export default function App() {
           )}
 
         </main>
+
+        </div>
 
       </div>
 

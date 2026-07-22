@@ -41,7 +41,7 @@ export default function MetricCard({
       onClick={onClick}
       className={`relative overflow-hidden rounded-xl border p-5 transition-all duration-200 cursor-pointer ${
         isSelected
-          ? 'border-neutral-900 bg-white shadow-sm ring-1 ring-neutral-900'
+          ? 'border-brand bg-white shadow-sm ring-1 ring-brand'
           : 'border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-sm'
       }`}
     >
@@ -96,7 +96,7 @@ export default function MetricCard({
 
       {/* Stripe-like indicator line for selected state */}
       {isSelected && (
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-neutral-900" />
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-brand" />
       )}
     </motion.div>
   );

@@ -60,7 +60,7 @@ export default function FilterBar({
               <select
                 value={selectedPreset}
                 onChange={(e) => handlePresetChange(e.target.value)}
-                className="rounded-lg border border-neutral-200 bg-white py-1.5 pr-8 pl-9 text-sm text-neutral-900 font-medium outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 cursor-pointer hover:bg-neutral-50 transition"
+                className="rounded-lg border border-neutral-200 bg-white py-1.5 pr-8 pl-9 text-sm text-neutral-900 font-medium outline-none focus:border-brand focus:ring-1 focus:ring-brand cursor-pointer hover:bg-neutral-50 transition"
               >
                 {DATE_PRESETS.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -82,7 +82,7 @@ export default function FilterBar({
                   value={customStartDate}
                   onChange={(e) => setCustomStartDate(e.target.value)}
                   max={customEndDate || '2026-07-10'}
-                  className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm font-mono text-neutral-900 outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 cursor-pointer"
+                  className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm font-mono text-neutral-900 outline-none focus:border-brand focus:ring-1 focus:ring-brand cursor-pointer"
                 />
               </div>
               <span className="mb-2 text-neutral-400 font-medium text-xs">to</span>
@@ -94,7 +94,7 @@ export default function FilterBar({
                   onChange={(e) => setCustomEndDate(e.target.value)}
                   min={customStartDate}
                   max="2026-07-10"
-                  className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm font-mono text-neutral-900 outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 cursor-pointer"
+                  className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm font-mono text-neutral-900 outline-none focus:border-brand focus:ring-1 focus:ring-brand cursor-pointer"
                 />
               </div>
             </div>
@@ -108,7 +108,7 @@ export default function FilterBar({
               <select
                 value={chartInterval}
                 onChange={(e) => setChartInterval(e.target.value as TimeInterval)}
-                className="rounded-lg border border-neutral-200 bg-white py-1.5 pr-8 pl-9 text-sm text-neutral-900 font-medium outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 cursor-pointer hover:bg-neutral-50 transition"
+                className="rounded-lg border border-neutral-200 bg-white py-1.5 pr-8 pl-9 text-sm text-neutral-900 font-medium outline-none focus:border-brand focus:ring-1 focus:ring-brand cursor-pointer hover:bg-neutral-50 transition"
               >
                 <option value="hourly">Hourly (1 Day)</option>
                 <option value="daily">Daily</option>
@@ -129,7 +129,7 @@ export default function FilterBar({
               <select
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-                className="rounded-lg border border-neutral-200 bg-white py-1.5 pr-8 pl-9 text-sm text-neutral-900 font-semibold outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 cursor-pointer hover:bg-neutral-50 transition"
+                className="rounded-lg border border-neutral-200 bg-white py-1.5 pr-8 pl-9 text-sm text-neutral-900 font-semibold outline-none focus:border-brand focus:ring-1 focus:ring-brand cursor-pointer hover:bg-neutral-50 transition"
               >
                 {CURRENCIES.map((c) => (
                   <option key={c.code} value={c.code}>
@@ -145,11 +145,11 @@ export default function FilterBar({
             {/* Live simulator button */}
             <button
               onClick={onAddSimulatedTx}
-              className="flex items-center gap-1.5 rounded-lg border border-neutral-900 bg-neutral-900 text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-neutral-850 active:scale-97 transition cursor-pointer"
-              title="Add a dynamic simulated payment to see numbers update instantly!"
+              className="flex items-center gap-1.5 rounded-lg border border-brand bg-brand text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-brand-hover hover:border-brand-hover active:scale-97 transition cursor-pointer"
+              title="Record a new payment"
             >
               <Plus className="h-4 w-4" />
-              <span>Simulate Pay</span>
+              <span>New Payment</span>
             </button>
 
             {/* Export CSV button */}
