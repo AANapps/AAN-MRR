@@ -349,7 +349,7 @@ export default function AdminPanel({
                   value={form.description}
                   onChange={(e) => handleField('description', e.target.value)}
                   className="w-full rounded-lg border border-neutral-200 px-3 py-1.5 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
-                  placeholder="SaaS Pro Subscription - Standard Monthly"
+                  placeholder="Junior Software Developer Program - Standard"
                 />
               </div>
             </div>

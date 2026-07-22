@@ -206,7 +206,7 @@ export default function App() {
   const handleAddSimulatedTx = () => {
     const randomNames = ['John Doe', 'Alice Freeman', 'Robert Lee', 'Zoe Jenkins', 'Kevin Patel', 'Hana Suzuki'];
     const randomEmails = ['john.d@company.com', 'alice@freeman.io', 'r.lee@tech.co', 'zoe.j@example.com', 'kpatel@fintech.net', 'hana@suzuki.co.jp'];
-    const randomDescs = ['SaaS Pro Subscription - Standard Monthly', 'API Usage Pack - Overages Tier 2', 'Developer Seat License add-on', 'Premium Support SLA - Custom Integration'];
+    const randomDescs = ['Junior Data Analyst Bootcamp - Full Course', 'Junior Software Developer Program - Standard', 'Junior Cloud & DevOps Associate Course', 'Junior Cybersecurity Analyst Program', 'Junior UX/UI Designer Bootcamp', 'Junior QA Engineer Certification Course'];
 
     const idx = Math.floor(Math.random() * randomNames.length);
     const prodIdx = Math.floor(Math.random() * randomDescs.length);

@@ -24,7 +24,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
   const [newProductName, setNewProductName] = useState('');
   const [newProductPrice, setNewProductPrice] = useState('');
   const [newProductInterval, setNewProductInterval] = useState<'one-time' | 'monthly' | 'yearly'>('monthly');
-  const [newProductCategory, setNewProductCategory] = useState('SaaS Plan');
+  const [newProductCategory, setNewProductCategory] = useState('Software Development');
 
   // Load custom-created products from local storage
   const [customProducts, setCustomProducts] = useState<ProductItem[]>(() => {
@@ -36,13 +36,13 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
   const productsData = useMemo(() => {
     // Standard baseline products catalog
     const baseCatalog: Record<string, Omit<ProductItem, 'totalSalesCount' | 'totalRevenueUSD'>> = {
-      'SaaS Pro Subscription - Enterprise Plan': { id: 'prod_ENT_01', name: 'SaaS Pro Subscription - Enterprise Plan', price: 499, interval: 'monthly', category: 'SaaS Plan' },
-      'SaaS Pro Subscription - Standard Monthly': { id: 'prod_STD_02', name: 'SaaS Pro Subscription - Standard Monthly', price: 79, interval: 'monthly', category: 'SaaS Plan' },
-      'SaaS Pro Subscription - Growth Annual': { id: 'prod_GRW_03', name: 'SaaS Pro Subscription - Growth Annual', price: 999, interval: 'yearly', category: 'SaaS Plan' },
-      'API Usage Pack - Overages Tier 2': { id: 'prod_API_04', name: 'API Usage Pack - Overages Tier 2', price: 149, interval: 'one-time', category: 'API Overages' },
-      'Premium Support SLA - Custom Integration': { id: 'prod_SLA_05', name: 'Premium Support SLA - Custom Integration', price: 300, interval: 'monthly', category: 'Support' },
-      'Consulting Session - Cloud Architecture': { id: 'prod_CNS_06', name: 'Consulting Session - Cloud Architecture', price: 250, interval: 'one-time', category: 'Consulting' },
-      'Developer Seat License add-on': { id: 'prod_SEAT_07', name: 'Developer Seat License add-on', price: 29, interval: 'monthly', category: 'SaaS Seat' },
+      'Junior Data Analyst Bootcamp - Full Course': { id: 'prod_JDA_01', name: 'Junior Data Analyst Bootcamp - Full Course', price: 2500, interval: 'one-time', category: 'Data & Analytics' },
+      'Junior Software Developer Program - Standard': { id: 'prod_JSD_02', name: 'Junior Software Developer Program - Standard', price: 1800, interval: 'monthly', category: 'Software Development' },
+      'Junior Software Developer Program - Career Track Annual': { id: 'prod_JSD_03', name: 'Junior Software Developer Program - Career Track Annual', price: 4800, interval: 'yearly', category: 'Software Development' },
+      'Junior Cloud & DevOps Associate Course': { id: 'prod_JCD_04', name: 'Junior Cloud & DevOps Associate Course', price: 2200, interval: 'one-time', category: 'Cloud & DevOps' },
+      'Junior Cybersecurity Analyst Program': { id: 'prod_JCA_05', name: 'Junior Cybersecurity Analyst Program', price: 3000, interval: 'monthly', category: 'Cybersecurity' },
+      'Junior UX/UI Designer Bootcamp': { id: 'prod_JUX_06', name: 'Junior UX/UI Designer Bootcamp', price: 2100, interval: 'one-time', category: 'Product & Design' },
+      'Junior QA Engineer Certification Course': { id: 'prod_JQA_07', name: 'Junior QA Engineer Certification Course', price: 1500, interval: 'one-time', category: 'QA & Testing' },
     };
 
     // Incorporate custom created products
@@ -106,7 +106,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
     setNewProductName('');
     setNewProductPrice('');
     setNewProductInterval('monthly');
-    setNewProductCategory('SaaS Plan');
+    setNewProductCategory('Software Development');
     setIsAddOpen(false);
 
     showToast(`📦 Product ${newProd.name} added with a price of ${formatCurrency(priceNum, currencyCode)}!`);
@@ -262,7 +262,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
                   <input
                     type="text"
                     required
-                    placeholder="E.g., SaaS Pro - Custom Team Plan"
+                    placeholder="E.g., Junior Product Analyst Bootcamp"
                     value={newProductName}
                     onChange={(e) => setNewProductName(e.target.value)}
                     className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950"
@@ -279,7 +279,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
                         required
                         min="1"
                         step="0.01"
-                        placeholder="19.99"
+                        placeholder="2500.00"
                         value={newProductPrice}
                         onChange={(e) => setNewProductPrice(e.target.value)}
                         className="w-full rounded-lg border border-neutral-200 bg-white py-2 pr-3 pl-8 text-sm text-neutral-900 outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950"
@@ -306,7 +306,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
                   <input
                     type="text"
                     required
-                    placeholder="E.g., SaaS Plan, Consulting, API Add-on"
+                    placeholder="E.g., Software Development, Data & Analytics, Cybersecurity"
                     value={newProductCategory}
                     onChange={(e) => setNewProductCategory(e.target.value)}
                     className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950"

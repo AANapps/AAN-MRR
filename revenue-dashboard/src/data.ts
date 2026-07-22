@@ -42,13 +42,13 @@ const CUSTOMERS = [
 ];
 
 const PRODUCTS = [
-  { desc: 'SaaS Pro Subscription - Enterprise Plan', basePrice: 499, cat: 'SaaS Plan' },
-  { desc: 'SaaS Pro Subscription - Standard Monthly', basePrice: 79, cat: 'SaaS Plan' },
-  { desc: 'SaaS Pro Subscription - Growth Annual', basePrice: 999, cat: 'SaaS Plan' },
-  { desc: 'API Usage Pack - Overages Tier 2', basePrice: 149, cat: 'API Overages' },
-  { desc: 'Premium Support SLA - Custom Integration', basePrice: 300, cat: 'Support' },
-  { desc: 'Consulting Session - Cloud Architecture', basePrice: 250, cat: 'Consulting' },
-  { desc: 'Developer Seat License add-on', basePrice: 29, cat: 'SaaS Seat' },
+  { desc: 'Junior Data Analyst Bootcamp - Full Course', basePrice: 2500, cat: 'Data & Analytics' },
+  { desc: 'Junior Software Developer Program - Standard', basePrice: 1800, cat: 'Software Development' },
+  { desc: 'Junior Software Developer Program - Career Track Annual', basePrice: 4800, cat: 'Software Development' },
+  { desc: 'Junior Cloud & DevOps Associate Course', basePrice: 2200, cat: 'Cloud & DevOps' },
+  { desc: 'Junior Cybersecurity Analyst Program', basePrice: 3000, cat: 'Cybersecurity' },
+  { desc: 'Junior UX/UI Designer Bootcamp', basePrice: 2100, cat: 'Product & Design' },
+  { desc: 'Junior QA Engineer Certification Course', basePrice: 1500, cat: 'QA & Testing' },
 ];
 
 const PAYMENT_METHODS: Array<'card' | 'bank_transfer' | 'apple_pay' | 'google_pay'> = [
