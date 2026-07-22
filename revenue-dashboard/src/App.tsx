@@ -271,11 +271,11 @@ export default function App() {
   const getBreadcrumbLabel = () => {
     switch (currentTab) {
       case 'home': return { title: 'Home', subtitle: 'Overview & business health metrics' };
-      case 'payments': return { title: 'Payments', subtitle: 'Audit individual charges and customer payouts' };
+      case 'payments': return { title: 'Transactions', subtitle: 'Audit individual charges and customer payouts' };
       case 'balances': return { title: 'Balances', subtitle: 'Funds settled, available, and historique logs' };
       case 'customers': return { title: 'Customers', subtitle: 'Review active subscriber directories and accounts' };
-      case 'products': return { title: 'Products', subtitle: 'Subscription products list and pricing catalog' };
-      case 'developers': return { title: 'Developers', subtitle: 'API logs, keys, and account configuration' };
+      case 'products': return { title: 'Product catalogue', subtitle: 'Subscription products list and pricing catalog' };
+      case 'developers': return { title: 'Workbench', subtitle: 'API logs, keys, and account configuration' };
     }
   };
 

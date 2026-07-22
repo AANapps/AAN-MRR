@@ -17,11 +17,11 @@ export default function LeftSidebar({
 }: LeftSidebarProps) {
   const navItems = [
     { id: 'home' as const, label: 'Home', icon: <Home className="h-4 w-4" /> },
-    { id: 'payments' as const, label: 'Payments', icon: <CreditCard className="h-4 w-4" /> },
     { id: 'balances' as const, label: 'Balances', icon: <Landmark className="h-4 w-4" /> },
+    { id: 'payments' as const, label: 'Transactions', icon: <CreditCard className="h-4 w-4" /> },
     { id: 'customers' as const, label: 'Customers', icon: <Users className="h-4 w-4" /> },
-    { id: 'products' as const, label: 'Products', icon: <Package className="h-4 w-4" /> },
-    { id: 'developers' as const, label: 'Developers', icon: <Code className="h-4 w-4" /> },
+    { id: 'products' as const, label: 'Product catalogue', icon: <Package className="h-4 w-4" /> },
+    { id: 'developers' as const, label: 'Workbench', icon: <Code className="h-4 w-4" /> },
   ];
 
   return (

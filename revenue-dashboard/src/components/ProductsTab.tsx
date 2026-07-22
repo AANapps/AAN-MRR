@@ -116,7 +116,7 @@ export default function ProductsTab({ transactions, currencyCode, showToast }: P
     <div className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Products</h2>
+          <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Product catalogue</h2>
           <p className="text-xs text-neutral-500">Track subscriptions, custom plans, billing rates, and individual revenue analytics</p>
         </div>
 

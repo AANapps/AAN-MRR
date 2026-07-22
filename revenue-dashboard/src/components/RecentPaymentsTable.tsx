@@ -102,7 +102,7 @@ export default function RecentPaymentsTable({ transactions, currencyCode, id, sh
       {/* Header section with search & quick status filters */}
       <div className="flex flex-col gap-4 border-b border-neutral-100 p-5 md:flex-row md:items-center md:justify-between">
         <div>
-          <h3 className="text-base font-semibold text-neutral-900">Payments</h3>
+          <h3 className="text-base font-semibold text-neutral-900">Transactions</h3>
           <p className="text-xs text-neutral-500">List of transactions in selected filter range</p>
         </div>
 

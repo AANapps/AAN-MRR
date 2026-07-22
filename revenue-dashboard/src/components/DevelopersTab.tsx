@@ -123,7 +123,7 @@ export default function DevelopersTab({
       
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Developers Console</h2>
+        <h2 className="text-xl font-bold text-neutral-900 tracking-tight">Workbench</h2>
         <p className="text-xs text-neutral-500">Access API keys, monitor real-time server traffic, and manage revenue targets</p>
       </div>
 
