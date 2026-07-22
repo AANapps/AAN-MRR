@@ -62,7 +62,8 @@ const PAYMENT_METHODS: Array<'card' | 'bank_transfer' | 'apple_pay' | 'google_pa
 
 /**
  * Generates mock transactions from 2 years ago up to 2026-07-10 (the current simulated time)
- * Each transaction amount is randomized between $2,000 and $15,000.
+ * Follows a growth curve by default: ~$3k-4k/month for the first ~13 months, ramping to
+ * ~$10k-12k/month through the following ~9 months, then ~$40k-50k/month for the last 3 months.
  * Supports custom simulation targets via config, which override the natural totals.
  */
 export function generateMockTransactions(config?: {
@@ -72,11 +73,11 @@ export function generateMockTransactions(config?: {
 }): Transaction[] {
   const transactions: Transaction[] = [];
   const rand = createRandom(101); // Seeded random for determinism
-  
+
   // Simulated timeline: From 2024-07-10 to 2026-07-10
   const limitStart = new Date('2024-07-10T00:00:00Z');
   const limitEnd = new Date('2026-07-10T23:59:59Z');
-  
+
   const MIN_TX_AMOUNT = 2000;
   const MAX_TX_AMOUNT = 15000;
   const AVG_TX_AMOUNT = (MIN_TX_AMOUNT + MAX_TX_AMOUNT) / 2; // 8,500 midpoint
@@ -96,7 +97,21 @@ export function generateMockTransactions(config?: {
       TARGET_MONTHLY_COUNT = Math.max(1, Math.round(TARGET_MONTHLY_REVENUE / AVG_TX_AMOUNT));
     }
   }
-  
+
+  // Default growth curve: monthsFromEnd counts back from the most recent month (0 = latest)
+  const getGrowthTarget = (monthsFromEnd: number) => {
+    if (monthsFromEnd <= 2) {
+      // Last 3 months: recent surge in volume and deal size
+      return { revenue: 40000 + rand() * 10000, count: 8 + Math.floor(rand() * 7) }; // $40k-50k, 8-14 txs
+    }
+    if (monthsFromEnd <= 11) {
+      // Months 4-12 back, stretching to about a year ago
+      return { revenue: 10000 + rand() * 2000, count: 2 + Math.floor(rand() * 3) }; // $10k-12k, 2-4 txs
+    }
+    // Older than a year: early-stage, single monthly payment
+    return { revenue: 3000 + rand() * 1000, count: 1 }; // $3k-4k, 1 tx
+  };
+
   // List of calendar months to generate
   const months: { year: number; month: number }[] = [];
   for (let y = 2024; y <= 2026; y++) {
@@ -109,21 +124,25 @@ export function generateMockTransactions(config?: {
 
   let currentId = 10000;
 
-  months.forEach(({ year, month }) => {
+  months.forEach(({ year, month }, monthIdx) => {
     // Determine start and end of this calendar month
     const monthStart = new Date(Date.UTC(year, month - 1, 1));
     const monthEnd = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
-    
+
     const actualStart = monthStart < limitStart ? limitStart : monthStart;
     const actualEnd = monthEnd > limitEnd ? limitEnd : monthEnd;
-    
+
     const totalDaysInMonth = new Date(year, month, 0).getDate();
     const activeDays = Math.max(1, Math.ceil((actualEnd.getTime() - actualStart.getTime()) / (1000 * 60 * 60 * 24)) + 1);
     const daysFraction = Math.min(1.0, activeDays / totalDaysInMonth);
 
     // Proportionate target calculations
-    const targetRevenue = Math.round(TARGET_MONTHLY_REVENUE * daysFraction * 100) / 100;
-    const targetCount = Math.round(TARGET_MONTHLY_COUNT * daysFraction);
+    const monthsFromEnd = months.length - 1 - monthIdx;
+    const growthTarget = hasCustomTarget ? null : getGrowthTarget(monthsFromEnd);
+    const monthlyRevenue = hasCustomTarget ? TARGET_MONTHLY_REVENUE : growthTarget!.revenue;
+    const monthlyCount = hasCustomTarget ? TARGET_MONTHLY_COUNT : growthTarget!.count;
+    const targetRevenue = Math.round(monthlyRevenue * daysFraction * 100) / 100;
+    const targetCount = Math.round(monthlyCount * daysFraction);
 
     if (targetCount <= 0) return;
 
@@ -164,28 +183,21 @@ export function generateMockTransactions(config?: {
       });
     }
 
-    if (hasCustomTarget) {
-      // Admin set an explicit target revenue: scale transactions to match it exactly
-      let runningSum = 0;
-      const scaleFactor = targetRevenue / rawAmountSum;
+    // Scale generated amounts so this month's total matches its target exactly,
+    // while keeping the organic per-transaction variance from the raw draws above.
+    let runningSum = 0;
+    const scaleFactor = targetRevenue / rawAmountSum;
 
-      monthTxs.forEach((tx, idx) => {
-        if (idx === monthTxs.length - 1) {
-          tx.amount = Math.round((targetRevenue - runningSum) * 100) / 100;
-        } else {
-          const scaledAmt = Math.round(tx.amount * scaleFactor * 100) / 100;
-          tx.amount = Math.max(1.0, scaledAmt);
-          runningSum += tx.amount;
-        }
-        tx.fee = Math.round((tx.amount * 0.029 + 0.3) * 100) / 100;
-      });
-    } else {
-      // No custom target: keep each transaction's organic $2,000-$15,000 amount
-      monthTxs.forEach((tx) => {
-        tx.amount = Math.round(tx.amount * 100) / 100;
-        tx.fee = Math.round((tx.amount * 0.029 + 0.3) * 100) / 100;
-      });
-    }
+    monthTxs.forEach((tx, idx) => {
+      if (idx === monthTxs.length - 1) {
+        tx.amount = Math.round((targetRevenue - runningSum) * 100) / 100;
+      } else {
+        const scaledAmt = Math.round(tx.amount * scaleFactor * 100) / 100;
+        tx.amount = Math.max(1.0, scaledAmt);
+        runningSum += tx.amount;
+      }
+      tx.fee = Math.round((tx.amount * 0.029 + 0.3) * 100) / 100;
+    });
 
     // Generate natural failed transactions (~4% failure rate)
     const failedCount = Math.round(targetCount * 0.04);
